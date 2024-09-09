@@ -213,18 +213,25 @@ class ViewTab:
         hide_if_empty: If true, the tab will be displayed only if its badge has a meaningful value. (Tabs without a
             badge are always displayed.)
     """
-    def __init__(self, label, badge=None, weight=1000, permission=None, hide_if_empty=False):
+    def __init__(self, label, badge=None, weight=1000, permission=None, hide_if_empty=False, visible=True):
         self.label = label
         self.badge = badge
         self.weight = weight
         self.permission = permission
         self.hide_if_empty = hide_if_empty
+        self.visible = visible
 
     def render(self, instance):
-        """Return the attributes needed to render a tab in HTML."""
+        """Return the attributes needed to render a tab in HTML, considering visibility."""
+        
+        # Check if the tab should not be visible
+        if not self._is_visible(instance):
+            return None
+
         badge_value = self._get_badge_value(instance)
         if self.badge and self.hide_if_empty and not badge_value:
             return None
+
         return {
             'label': self.label,
             'badge': badge_value,
@@ -237,6 +244,12 @@ class ViewTab:
         if callable(self.badge):
             return self.badge(instance)
         return self.badge
+
+    def _is_visible(self, instance):
+        """Evaluate the visibility attribute."""
+        if callable(self.visible):
+            return self.visible(instance)
+        return self.visible
 
 
 #
