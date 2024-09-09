@@ -205,14 +205,18 @@ class ViewTab:
     a particular object.
 
     Args:
-        label: Human-friendly text
+        label: Human-friendly text.
         badge: A static value or callable to display alongside the label (optional). If a callable is used, it must
             accept a single argument representing the object being viewed.
-        weight: Numeric weight to influence ordering among other tabs (default: 1000)
+        weight: Numeric weight to influence ordering among other tabs (default: 1000).
         permission: The permission required to display the tab (optional).
         hide_if_empty: If true, the tab will be displayed only if its badge has a meaningful value. (Tabs without a
             badge are always displayed.)
+        visible: A callable to dynamically control the visibility of the tab (default: True). The callable must accept 
+            a single argument representing the object being viewed and return a boolean indicating whether the tab 
+            should be visible. If no callable is provided, the tab is always visible by default.
     """
+    
     def __init__(self, label, badge=None, weight=1000, permission=None, hide_if_empty=False, visible=True):
         self.label = label
         self.badge = badge
